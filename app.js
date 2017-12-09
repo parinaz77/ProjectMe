@@ -3,20 +3,21 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const keys = require('./config/keys')
 const app = express();
+const indexRoutes = require('./routes/index');
 
 passport.use(
-	new GoogleStrategy({
-		clinetID: keys.googleClientID,
+	new GoogleStrategy(
+	{
+		clientID: keys.googleClientID,
 		clientSecret: keys.googleClientSecret,
 		callbackURL: '/auth/google/callback'
-	},(accessToken)=>{
+	},
+	(accessToken, refreshToken, profile, done) => {
 		console.log(accessToken);
 	})
 );
 
-app.get('/', (req, res) => {
-	res.send({ hi: 'there' });
-});
+app.use(indexRoutes);
 
 
 const PORT = process.env.PORT || 3000;
